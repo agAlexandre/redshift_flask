@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Insert Airport</title>
+</head>
+<div>
+    <form action="/">
+    <button type="submit">Home Page</button></form>
+</div>
+<body>
+    <form method="post">
+        <div>
+            <h3>Airport</h3>
+        <div>
+            <label for="lineCode">Airport Code:</label>
+            <input type="number" min ="1" max="9999"id="code_airport" name="code_airport" required/>
+        </div>    
+        <div>
+            <label for="lineName">Airport Adress:</label>
+            <input type="text" maxlength="50" id="adress_airport" name="adress_airport" required/>
+        </div>
+        <div>
+            <label for="dtLeaving">Airport Phone:</label>
+            <input type="tel" maxlength="20" id="phone_airport" name="phone_airport" required/>
+        </div>
+        <div>
+            <label for="dtLeaving">Airport State:</label>
+            <input type="text" maxlength="20" id="state_airport" name="state_airport" required/>
+        </div>
+        <div>
+            <label for="dtLeaving">Airport City:</label>
+            <input type="text" maxlength="20" id="city_airport" name="city_airport" required/>
+        </div>
+        <div>
+            <label for="dtLeaving">Airport ZIP Code:</label>
+            <input type="text" maxlength="20" id="zip_code_airport" name="zip_code_airport" required/>
+        </div>
+        <div class="button">
+            <button type="submit">Send data</button>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Insert Take-Off</title>
+</head>
+<div>
+    <form action="/">
+    <button type="submit">Home Page</button></form>
+</div>
+<body>
+    <form method="post">
+        <div>
+            <h3>Insert Take-Off Now !</h3>
+            <div>
+                <label for="lineCode">Flight Code:</label>
+                <input type="number" min ="1" max="9999"id="code_flight" name="code_flight" required/>
+            </div>    
+            <div>
+                <label for="lineName">Flight Number:</label>
+                <input type="number" min ="1" max="999999" id="number_flight" name="number_flight" required/>
+            </div>
+            <div>
+                <label for="dtLeaving">Flight Tariff:</label>
+                <input type="number" step="0.01"id="tariff_flight" name="tariff_flight" required/>
+            </div>   
+        <div class="button">
+            <button type="submit">Take-Off Now !</button>
+        </div>
+    </form>
+</body>
+</html>

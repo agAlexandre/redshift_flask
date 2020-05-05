@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Insert Air Reservation</title>
+</head>
+<div>
+    <form action="/">
+    <button type="submit">Home Page</button></form>
+</div>
+<body>
+    <form method="post">
+        <div>
+            <h3>Airline</h3>
+        <div>
+            <label for="lineCode">Airline Code:</label>
+            <input type="number" min ="1" max="9999"id="code_airline" name="code_airline" required/>
+        </div>    
+        <div>
+            <label for="lineName">Airline Name:</label>
+            <input type="text" maxlength="50" id="name_airline" name="name_airline" required/>
+        </div>
+        <div>
+            <label for="dtLeaving">Airline Email:</label>
+            <input type="email" maxlength="50" id="email_airline" name="email_airline" required/>
+        </div>
+        <div class="button">
+            <button type="submit">Send data</button>
+        </div>
+    </form>
+</body>
+</html>
