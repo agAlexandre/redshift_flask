@@ -177,7 +177,7 @@ def insertTakeOff():
             		dim_destiny_place,\
             		dim_origin_place,\
             		dim_passenger,\
-            		dim_plane "\
+            		dim_plane \
 		COMMIT; "
         with engine.begin() as conn:
             conn.execute(query)
