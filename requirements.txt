@@ -3,7 +3,6 @@ Flask-Bootstrap==2.3.2.1
 Flask-SQLAlchemy==2.4.1
 numpy==1.18.4
 pandas==1.0.3
-psycopg2==2.8.4
 requests==2.22.0
 requests-unixsocket==0.2.0
 simplejson==3.16.0

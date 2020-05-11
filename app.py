@@ -22,7 +22,7 @@ def insertPassenger():
         query = \
         "INSERT INTO dim_passenger \
         (name_passenger,cpf_passenger,email_passenger,phone_passenger)\
-        VALUES('%s','%s','%s','%s');"\
+        VALUES('%s','%s','%s','%s')"\
         %(name_passenger,cpf_passenger,email_passenger,phone_passenger) 
         with engine.begin() as conn:
             conn.execute(query)
@@ -32,17 +32,17 @@ def insertPassenger():
 @app.route('/reservation.html',methods=['GET','POST'])
 def insertAirReservation():
     if request.method == 'POST':
-        fk_time_reservation=1
         number_reservation = request.form['number_reservation']
         number_armchair = request.form['number_armchair']
         date_leaving = request.form['date_leaving']
         date_back = request.form['date_back']
         engine = sa.create_engine('redshift+psycopg2://awsuser:2020Inmetrics@inmetrics.c7adyubj9dlv.us-east-2.redshift.amazonaws.com:5439/airport')
-        query = \
-        f"INSERT INTO dim_air_reservation\
-        (number_reservation ,number_armchair,date_leaving,date_back,fk_time_reservation)\
-        VALUES('%s','%s','%s','%s',{fk_time_reservation});"\
-        %(number_reservation,number_armchair,date_leaving,date_back) 
+        query ="START TRANSACTION;\
+           INSERT INTO dim_air_reservation (number_reservation,number_armchair ,date_leaving,date_back,reservation_created_at )\
+	        VALUES('%s','%s','%s','%s',CURRENT_TIMESTAMP);\
+           INSERT INTO dim_time_reservation (reservation_created_at) \
+                VALUES (CURRENT_TIMESTAMP);\
+           COMMIT;"%(number_reservation,number_armchair,date_leaving,date_back) 
         with engine.begin() as conn:
             conn.execute(query)
         conn.close()
@@ -67,6 +67,7 @@ def insertAirline():
 @app.route('/airport.html',methods=['GET','POST'])
 def insertAirport():
     if request.method == 'POST':
+        #name_airport = request.form['name_airport']
         code_airport = request.form['code_airport']
         adress_airport = request.form['adress_airport']
         phone_airport = request.form['phone_airport']
@@ -140,40 +141,44 @@ def insertTakeOff():
         number_flight = request.form['number_flight']
         tariff_flight = request.form['tariff_flight']
         engine = sa.create_engine('redshift+psycopg2://awsuser:2020Inmetrics@inmetrics.c7adyubj9dlv.us-east-2.redshift.amazonaws.com:5439/airport')
-        query = f"\
-        INSERT INTO fact_flights(code_flight,\
-            acount_flights,\
-            tariff_flight ,\
-            number_flight ,\
-            fk_dim_air_reservation,\
-            fk_dim_airline,\
-            fk_dim_airport,\
-            fk_dim_destiny,\
-            fk_dim_origin_place,\
-            fk_dim_passenger,\
-            fk_dim_plane,\
-            fk_dim_time_flight)\
-        SELECT {code_flight},\
-            COUNT(DISTINCT number_flight ),\
-            {tariff_flight},\
-            {number_flight},\
-            MAX(sk_dim_air_reservation),\
-            MAX(sk_dim_airline),\
-            MAX(sk_dim_airport),\
-            MAX(sk_dim_destiny_place),\
-            MAX(sk_dim_origin_place),\
-            MAX(sk_dim_passenger),\
-            MAX(sk_dim_plane),\
-            MAX(sk_dim_time_flight)\
-        FROM fact_flights,\
-            dim_time_flight,\
-            dim_air_reservation,\
-            dim_airline,\
-            dim_airport,\
-            dim_destiny_place,\
-            dim_origin_place,\
-            dim_passenger,\
-            dim_plane "
+        query = f"START TRANSACTION;\
+		INSERT INTO dim_time_flight (flight_created_at) VALUES (CURRENT_TIMESTAMP);\
+		INSERT INTO fact_flights(code_flight,\
+             		acount_flights,\
+            		tariff_flight ,\
+            		number_flight ,\
+            		fk_dim_air_reservation,\
+            		fk_dim_airline,\
+           		fk_dim_airport,\
+            		fk_dim_destiny,\
+            		fk_dim_origin_place,\
+            		fk_dim_passenger,\
+            		fk_dim_plane,\
+            		fk_dim_time_flight,\
+            		flight_created_at)\
+        	SELECT {code_flight},\
+            		COUNT(DISTINCT number_flight ),\
+            		{tariff_flight},\
+            		{number_flight},\
+            		MAX(sk_dim_air_reservation),\
+            		MAX(sk_dim_airline),\
+            		MAX(sk_dim_airport),\
+            		MAX(sk_dim_destiny_place),\
+           		MAX(sk_dim_origin_place),\
+            		MAX(sk_dim_passenger),\
+            		MAX(sk_dim_plane),\
+            		MAX(sk_dim_time_flight),\
+            		CURRENT_TIMESTAMP\
+        	FROM fact_flights,\
+            		dim_time_flight,\
+            		dim_air_reservation,\
+            		dim_airline,\
+            		dim_airport,\
+            		dim_destiny_place,\
+            		dim_origin_place,\
+            		dim_passenger,\
+            		dim_plane "\
+		COMMIT; "
         with engine.begin() as conn:
             conn.execute(query)
         conn.close()
