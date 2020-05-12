@@ -38,7 +38,7 @@ def insertAirReservation():
         date_back = request.form['date_back']
         engine = sa.create_engine('redshift+psycopg2://awsuser:2020Inmetrics@inmetrics.c7adyubj9dlv.us-east-2.redshift.amazonaws.com:5439/airport')
         query ="START TRANSACTION;\
-           INSERT INTO dim_air_reservation (number_reservation,number_armchair ,date_leaving,date_back,reservation_created_at )\
+           INSERT INTO dim_air_reservation (number_reservation,number_armchair ,date_leaving,date_back,fk_reservation_created_at )\
 	        VALUES('%s','%s','%s','%s',CURRENT_TIMESTAMP);\
            INSERT INTO dim_time_reservation (reservation_created_at) \
                 VALUES (CURRENT_TIMESTAMP);\
@@ -67,7 +67,7 @@ def insertAirline():
 @app.route('/airport.html',methods=['GET','POST'])
 def insertAirport():
     if request.method == 'POST':
-        #name_airport = request.form['name_airport']
+        name_airport = request.form['name_airport']
         code_airport = request.form['code_airport']
         adress_airport = request.form['adress_airport']
         phone_airport = request.form['phone_airport']
@@ -76,9 +76,9 @@ def insertAirport():
         zip_code_airport= request.form['zip_code_airport']
         engine = sa.create_engine('redshift+psycopg2://awsuser:2020Inmetrics@inmetrics.c7adyubj9dlv.us-east-2.redshift.amazonaws.com:5439/airport')
         query = \
-        "INSERT INTO dim_airport (code_airport,adress_airport,phone_airport,state_airport,city_airport,zip_code_airport)\
-        VALUES('%s','%s','%s','%s','%s','%s');"\
-        %(code_airport,adress_airport,phone_airport,state_airport,city_airport,zip_code_airport)      
+        "INSERT INTO dim_airport (code_airport,name_airport,adress_airport,phone_airport,state_airport,city_airport,zip_code_airport)\
+        VALUES('%s','%s','%s','%s','%s','%s','%s');"\
+        %(code_airport,name_airport,adress_airport,phone_airport,state_airport,city_airport,zip_code_airport)      
         with engine.begin() as conn:
             conn.execute(query)
         conn.close()
@@ -155,7 +155,7 @@ def insertTakeOff():
             		fk_dim_passenger,\
             		fk_dim_plane,\
             		fk_dim_time_flight,\
-            		flight_created_at)\
+            		fk_flight_created_at)\
         	SELECT {code_flight},\
             		COUNT(DISTINCT number_flight ),\
             		{tariff_flight},\
@@ -177,7 +177,7 @@ def insertTakeOff():
             		dim_destiny_place,\
             		dim_origin_place,\
             		dim_passenger,\
-            		dim_plane \
+            		dim_plane\
 		COMMIT; "
         with engine.begin() as conn:
             conn.execute(query)
